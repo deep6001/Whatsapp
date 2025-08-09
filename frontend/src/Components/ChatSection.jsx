@@ -6,7 +6,9 @@ import axios from 'axios';
 import useChatStore, { useViewStore } from '../store/store';
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:5000'); // ✅ Change to your server URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
+const socket = io(`${API_BASE_URL}`) // ✅ Change to your server URL
 
 function ChatSection() {
   const selectedUser = useChatStore((state) => state.selectedUser);
@@ -20,7 +22,7 @@ function ChatSection() {
     if (!selectedUser?._id) return;
 
     axios
-      .get(`http://localhost:5000/api/messages/${selectedUser._id}`)
+      .get(`${API_BASE_URL}/api/messages/${selectedUser._id}`)
       .then((res) => setMessages(res.data))
       .catch((err) => console.error('Failed to fetch messages', err));
 
@@ -67,7 +69,7 @@ function ChatSection() {
     setInput('');
 
     // Save to DB
-    axios.post('http://localhost:5000/api/messages/insert', newMsg)
+    axios.post(`${API_BASE_URL}/api/messages/insert`, newMsg)
       .catch((err) => console.error('Send failed', err));
 
     // Send via WebSocket

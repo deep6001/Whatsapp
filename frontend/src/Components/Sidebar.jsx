@@ -3,16 +3,18 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import useChatStore from '../store/store';
 import { useViewStore } from '../store/store';
+
 function Sidebar() {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState('');
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
   const setSelectedUser = useChatStore((state) => state.setSelectedUser);
   const setShowChat = useViewStore((state) => state.setShowChat); // 📌
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/messages/getallusers')
+      .get(`${API_BASE_URL}/api/messages/getallusers`)
       .then((res) => setUsers(res.data))
       .catch((err) => console.error('Failed to fetch users', err));
   }, []);
