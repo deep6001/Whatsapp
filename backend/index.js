@@ -12,7 +12,16 @@ connectDB();
 
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://whatsapp-a7yf.vercel.app", // frontend URL
+      "http://localhost:5173" // for local dev
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+  })
+);
 app.use(express.json());
 
 app.get('/', (req, res) => {
