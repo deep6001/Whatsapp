@@ -14,7 +14,7 @@ const app = express();
 
 // Allowed origins
 const allowedOrigins = [
-  "https://whatsapp-oo3o.vercel.app/", // production
+  "https://whatsapp-oo3o.vercel.app", // production
   "http://localhost:5173" // local dev
 ];
 
@@ -47,7 +47,8 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
