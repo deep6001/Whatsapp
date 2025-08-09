@@ -7,10 +7,7 @@ import useChatStore, { useViewStore } from '../store/store';
 import { io } from 'socket.io-client';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-const socket = io(`${API_BASE_URL}`,{
-  transports: ["websocket", "polling"],
-  withCredentials: true
-});
+const socket = io(`${API_BASE_URL}`);
 
 function ChatSection() {
   const selectedUser = useChatStore((state) => state.selectedUser);
