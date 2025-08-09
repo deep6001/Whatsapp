@@ -14,7 +14,7 @@ const app = express();
 
 // Allowed origins
 const allowedOrigins = [
-  "https://whatsapp-a7yf.vercel.app", // production
+  "https://whatsapp-oo3o.vercel.app/", // production
   "http://localhost:5173" // local dev
 ];
 
