@@ -114,7 +114,7 @@ function ChatSection() {
           </div>
           <h2 className="text-lg font-semibold">{selectedUser.name || 'Unknown'}</h2>
         </div>
-        <span className="text-xs text-gray-300">last seen today at 20:29</span>
+        <span className="text-xs hidden sm:block text-gray-300">last seen today at 20:29</span>
       </div>
 
       {/* Messages */}
