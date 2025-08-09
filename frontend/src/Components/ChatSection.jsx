@@ -7,8 +7,7 @@ import useChatStore, { useViewStore } from '../store/store';
 import { io } from 'socket.io-client';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-
-const socket = io(`${API_BASE_URL}`) // ✅ Change to your server URL
+const socket = io(`${API_BASE_URL}`);
 
 function ChatSection() {
   const selectedUser = useChatStore((state) => state.selectedUser);
@@ -26,13 +25,16 @@ function ChatSection() {
       .then((res) => setMessages(res.data))
       .catch((err) => console.error('Failed to fetch messages', err));
 
-    // Join socket room for real-time chat
+    // Join socket room
     socket.emit('join_room', selectedUser._id);
 
-    // Listen for new incoming messages
+    // Listen for new messages without duplicates
     socket.on('receive_message', (msg) => {
       if (msg.wa_id === selectedUser._id) {
-        setMessages((prev) => [...prev, msg]);
+        setMessages((prev) => {
+          if (prev.some(m => m.id === msg.id)) return prev; // prevent duplicate
+          return [...prev, msg];
+        });
       }
     });
 
@@ -51,10 +53,10 @@ function ChatSection() {
     const nowSec = Math.floor(Date.now() / 1000);
 
     const newMsg = {
-      id: `wamid.${Date.now()}-${Math.random().toString(36).slice(2)}`, // simple wamid generator
+      id: `wamid.${Date.now()}-${Math.random().toString(36).slice(2)}`,
       contact_name: selectedUser.name,
       direction: 'outbound',
-      from: '918329446654', // ✅ Your number
+      from: '918329446654',
       status: 'sent',
       text: input,
       timestamp: nowSec,
@@ -64,13 +66,9 @@ function ChatSection() {
       status_timestamp: nowSec
     };
 
-    // Show instantly
+    // Add instantly to UI
     setMessages((prev) => [...prev, newMsg]);
     setInput('');
-
-    // Save to DB
-    axios.post(`${API_BASE_URL}/api/messages/insert`, newMsg)
-      .catch((err) => console.error('Send failed', err));
 
     // Send via WebSocket
     socket.emit('send_message', newMsg);
